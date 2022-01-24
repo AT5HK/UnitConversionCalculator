@@ -9,45 +9,41 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var number = 0.0
-    @State private var unitSelection: String = "M"
-    @State private var unitConversionSelection: String = "M"
+    @State private var unitSelection: Units = .feet
+    @State private var unitConversionSelection: Units = .feet
     @FocusState private var textFieldFocused: Bool
     
-    private let units = ["KM", "M", "FT", "YD", "MI"]
+    private let units = Units.allCases
     
     private var convertedValue: Double {
         
         //convert unit to feet
         var feet = 0.0
         switch unitSelection {
-        case "KM":
+        case .kilometers:
             feet = number * 3280.84
-        case "M":
+        case .meters:
             feet = number * 3.28084
-        case "FT":
+        case .feet:
             feet = number * 1
-        case "YD":
+        case .yards:
             feet = number * 3
-        case "MI":
+        case .miles:
             feet = number * 5280
-        default:
-            print("default something went wrong")
         }
         
         var finalNumber = 0.0
         switch unitConversionSelection {
-        case "KM":
+        case .kilometers:
             finalNumber = feet * 0.0003048
-        case "M":
+        case .meters:
             finalNumber = feet * 0.3048
-        case "FT":
+        case .feet:
             finalNumber = feet * 1
-        case "YD":
+        case .yards:
             finalNumber = feet * 0.333333
-        case "MI":
+        case .miles:
             finalNumber = feet * 0.000189394
-        default:
-            print("default something went wrong")
         }
         
         return finalNumber
@@ -65,7 +61,7 @@ struct ContentView: View {
                 Section {
                     Picker("units", selection: $unitSelection) {
                         ForEach(units, id: \.self) { unit in
-                            Text(unit)
+                            Text(unit.prefix)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -76,7 +72,7 @@ struct ContentView: View {
                 Section {
                     Picker("units", selection: $unitConversionSelection) {
                         ForEach(units, id: \.self) { unit in
-                            Text(unit)
+                            Text(unit.prefix)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -87,7 +83,7 @@ struct ContentView: View {
                 Section {
                     Text(convertedValue, format: .number)
                 } header: {
-                    Text("\(unitSelection) to \(unitConversionSelection)")
+                    Text("\(unitSelection.rawValue) to \(unitConversionSelection.rawValue)")
                 }
             }
             .toolbar {
